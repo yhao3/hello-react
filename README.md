@@ -140,7 +140,7 @@
       - 該函式接收一個欲新增的 todoObj，當想傳數據給(父)元件 `App` 時，就調用該函式，將原 todos 狀態更新
       - `App` 狀態更新後，就會呼叫 `App` 中的 render() 函式，由於 `List` 是其子元件，故也導致子元件重新渲染，達成按下 [Enter] 後將列表重新渲染的需求
 
-## 3.4 鼠標移入時顯示[刪除]按鈕效果
+## 3.4 鼠標移入時 更改 <li> 背景色 並 顯示[刪除]按鈕效果
 ### `Item.jsx`
 1. 將 <li> 標籤添加css樣式，並綁定鼠標移入移出事件
 2. 宣告 並 初始化 state: 
@@ -149,18 +149,22 @@
    state = { isMouseEnter: false }
    ```
 3. 宣告 onMouseEnter 及 onMouseLeave 兩事件的 callback function
-    ```jsx
-    /**
-     * onMouseEnter 及 onMouseLeave 兩事件的 callback function
-     * 1. 當鼠標移入觸發 onMouseEnter 事件，會傳入 true 參數，修改 Item 的 isMouseEnter 狀態，以控制 <li> 之背景色及是否顯示[刪除]按鈕
-     * 2. 當鼠標移出觸發 onMouseLeave 事件，會傳入 false 參數，修改 Item 的 isMouseEnter 狀態，以控制 <li> 之背景色及是否顯示[刪除]按鈕
-     * @param {*} true_or_false 
-     * @returns 
-     */
-     handleMouse = (true_or_false) => {
+   ```jsx
+   /**
+    * onMouseEnter 及 onMouseLeave 兩事件的 callback function
+    * 1. 當鼠標移入觸發 onMouseEnter 事件，會傳入 true 參數，修改 Item 的 isMouseEnter 狀態，以控制 <li> 之背景色及是否顯示[刪除]按鈕
+    * 2. 當鼠標移出觸發 onMouseLeave 事件，會傳入 false 參數，修改 Item 的 isMouseEnter 狀態，以控制 <li> 之背景色及是否顯示[刪除]按鈕
+    * @param {*} true_or_false 
+    * @returns 
+    */
+    handleMouse = (true_or_false) => {
+        // 注意: 因為事件綁定此 callback 函式時有加小括號()，所以回傳值必須為「函式」!!
+        // 錯誤的: 
+        // this.setState( {isMouseEnter: true_or_false} );
+        // 正確的: 
         return () => {
-            this.setState( {isMouseEnter: true_or_false} )
+            this.setState( {isMouseEnter: true_or_false} );
         }
-     }
-     ```
+    }
+    ```
 4. [刪除]按鈕添加css樣式，根據 isMouseEnter 狀態決定是否顯示

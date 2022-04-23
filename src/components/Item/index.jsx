@@ -15,8 +15,12 @@ export default class Item extends Component {
    * @returns 
    */
   handleMouse = (true_or_false) => {
+    // 注意: 因為事件綁定此 callback 函式時有加小括號()，所以回傳值必須為「函式」!!
+    // 錯誤的: 
+    // this.setState( {isMouseEnter: true_or_false} );
+    // 正確的: 
     return () => {
-      this.setState( {isMouseEnter: true_or_false} )
+      this.setState( {isMouseEnter: true_or_false} );
     }
   }
 
