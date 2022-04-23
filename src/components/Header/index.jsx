@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './index.css'
 
+
 export default class Header extends Component {
 
   handleKeyUp = (event) => { // event 說明: 「綁定節點」跟「想要拿到值的節點」相同 ⮕ 直接傳入 event 物件即可，不需用 Ref
