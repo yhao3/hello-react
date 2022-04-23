@@ -22,4 +22,5 @@ function App() {
   );
 }
 
+// 沒有渲染到頁面，改用 ES6 的語法 export
 export default App;
