@@ -1,5 +1,5 @@
-# TodoList project
-## STEP
+# 03_TodoList project
+## 3.1 STEP
 1. 拆分結構
 2. 拆分樣式
 3. 設計 state 的位置
@@ -9,7 +9,7 @@
         - 所以若把 單一任務 state 放在其中一方，該 state 是無法共享的
         - 因此可以把它放在兩者的父元件 - App 中
 4. coding
-## 動態初始列表展示
+## 3.2 動態初始列表展示
 - 將 todos 該 state 放在 App 元件中
 - `App.jsx` 傳入 todos 該 state 給 `List` 子元件當作 props，供其使用
     `App.jsx`
@@ -54,7 +54,7 @@
         }
     }
     ```
-## 新增「添加一筆任務(todo)」功能
+## 3.3 新增「添加一筆任務(todo)」功能
 ### Header.jsx
 1. 將input標籤綁定 onKeyUp event
 2. 定義事件 callback function: handleKeyUp()
@@ -77,8 +77,60 @@
             1. (父) 通過「props」，傳給(子)一個「函式」
             2. (子) 在適當時機，也就是當(子)元件想傳數據給(父)元件時，就調用該函式
         - `App.jsx`
-          ```jsx
-          
-          ```
-        - `List.jsx`
-    - `App` (父)元件將 todos 此 state 傳給 `List` (子)元件遍歷，實現動態更新
+            1. (父)定義 addTodo function
+            ```jsx
+            /**
+             * addTodo 用於添加一個任務(todo)，接收的參數是欲添加的 todo 物件，並將原 todos 狀態更新
+             * @param todo object
+             * @returns 
+             */
+            addTodo = (todoObj) => {
+                // step1: 獲取原 todos
+                const {todos} = this.state;
+                // step2: 在既有的 todos 上追加新的 todo
+                const newTodos = [todoObj, ...todos];
+                // step3: update state
+                this.setState({ todos: newTodos });
+            }
+            ```
+            1. (父) 通過「props」，將「函式」傳給(子)`Header`
+            ```jsx
+            <Header addTodoxxx={this.addTodo} />
+            ```
+        - `Header.jsx`
+            1. 再按下 [Enter] 後，添加以下邏輯: 
+                ```jsx
+                handleKeyUp = (event) => { 
+                    ...
+                    // 錯誤驗證: input value 不得為空
+                    if (target.value.trim() === '') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '請輸入文字'
+                        })
+                        return;
+                    }
+                    // 準備好一個 todo 物件
+                    const todoObj = {id: Date.now(), name:target.value, done: false};
+                    // 將欲添加的 todoObj 傳遞給 App
+                    this.props.addTodoxxx( todoObj );
+                    console.log(target.value, keyCode);
+                    // 成功添加後清空輸入欄
+                    target.value = '';
+                    Swal.fire({
+                        icon: 'success',
+                        title: '任務添加成功',
+                        timer: 2000
+                    })
+                }
+                ```
+            2. 註: 在此使用到 sweetalert2 套件: 
+               - 安裝方式: 
+                ```
+                npm install --save sweetalert2 sweetalert2-react-content
+                ```
+               - import: 
+                ```jsx
+                import Swal from 'sweetalert2';
+                ```
+    - `App` (父)元件將 todos 此 state 傳給 `List` (子)元件遍歷，實現動態更新: 已完成，參考 [## 3.2 動態初始列表展示]

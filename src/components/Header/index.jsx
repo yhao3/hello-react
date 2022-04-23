@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Swal from 'sweetalert2';
 import './index.css'
 
 
@@ -13,16 +14,26 @@ export default class Header extends Component {
       return;
     }
 
-    // ========== 錯誤驗證 ==========
-    // 1. input value 不得為空
+    // 錯誤驗證: input value 不得為空
     if (target.value.trim() === '') {
-      
+      Swal.fire({
+        icon: 'error',
+        title: '請輸入文字'
+      })
+      return;
     }
     // 準備好一個 todo 物件
     const todoObj = {id: Date.now(), name:target.value, done: false};
     // 將欲添加的 todoObj 傳遞給 App
     this.props.addTodoxxx( todoObj );
     console.log(target.value, keyCode);
+    // 成功添加後清空輸入欄
+    target.value = '';
+    Swal.fire({
+      icon: 'success',
+      title: '任務添加成功',
+      timer: 2000
+    })
   }
 
   render() {
