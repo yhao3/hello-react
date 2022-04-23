@@ -54,8 +54,8 @@
         }
     }
     ```
-## 3.3 新增「添加一筆任務(todo)」功能
-### Header.jsx
+## 3.3 `新增「添加一筆任務(todo)」功能`
+### `Header.jsx`
 1. 將input標籤綁定 onKeyUp event
 2. 定義事件 callback function: handleKeyUp()
     ```jsx
@@ -69,7 +69,7 @@
         }
     }
     ```
-3. 將 `Header` 元件中的 input value 塞到 `List` 元件中
+3. GOAL: 將 `Header` 元件中的 input value 塞到 `List` 元件中
     - 思路: `Header(子)` ⮕ `App(父)` ⮕ `List(子)`
     - `Header` (子)元件中使用者輸入的 input value，要影響 `App` (父)元件中維護的 todos 此 state（讓 `App` 元件更新狀態）
         - 子元件 要怎麼和 父元件 溝通？ 涉及到「元件的通信」，參考筆記: 
@@ -82,7 +82,7 @@
             /**
              * addTodo 用於添加一個任務(todo)，接收的參數是欲添加的 todo 物件，並將原 todos 狀態更新
              * @param todo object
-             * @returns 
+             * @returns undefined
              */
             addTodo = (todoObj) => {
                 // step1: 獲取原 todos
@@ -134,3 +134,10 @@
                 import Swal from 'sweetalert2';
                 ```
     - `App` (父)元件將 todos 此 state 傳給 `List` (子)元件遍歷，實現動態更新: 已完成，參考 [## 3.2 動態初始列表展示]
+    - 整體邏輯如下: 
+      - `App` 存了所有任務state ⮕ 給 `List`
+      - `App` 傳給 `Header` 一個函式
+      - 該函式接收一個欲新增的 todoObj，當想傳數據給(父)元件 `App` 時，就調用該函式，將原 todos 狀態更新
+      - `App` 狀態更新後，就會呼叫 `App` 中的 render() 函式，由於 `List` 是其子元件，故也導致子元件重新渲染，達成按下 [Enter] 後將列表重新渲染的需求
+
+
