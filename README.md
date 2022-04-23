@@ -12,3 +12,6 @@
 3. Hello.jsx
 - src/components/Hello/Hello.jsx
 - a sub Component
+
+## install React extension: 
+https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snippets
