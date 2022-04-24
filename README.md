@@ -243,3 +243,21 @@
 3. 如此一來，當某 Item 元件 勾選 或 取消勾選 時，就會調用 handleCheck ，在函式中又會呼叫從 (祖父)App.jsx 傳來的 updateTodoyyy() 來更新 todos 狀態，`App` 狀態更新後，就會呼叫 `App` 中的 render() 函式，由於 `List` 是其子元件，故也導致子元件重新渲染，達成 (孫子)勾選 或 取消勾選 時，同時更新 (祖父)App.jsx 中的 todos 狀態的需求
 
 ### 結論: 「狀態」在哪裡，「操作狀態的方法」就宣告在哪裡
+
+## 3.6 對 props 進行限制
+### STEP1: install `prop-types`
+```
+npm install prop-types
+```
+### STEP2: import
+```jsx
+import PropTypes from 'prop-types'
+```
+### STEP3: 進行限制 
+```jsx
+// ex: 對接收的 props 進行「型別」及「必要性」的限制
+static PropTypes = {
+    todosxxx: PropTypes.array.isRequired, 
+    updateTodoxxx: PropTypes.func.isRequired
+}
+```

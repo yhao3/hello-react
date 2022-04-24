@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
-import './index.css'
+import PropTypes from 'prop-types';
+import './index.css';
 
 export default class Item extends Component {
+
+    // 對接收的 props 進行「型別」及「必要性」的限制
+    static PropTypes = {
+      updateTodoyyy: PropTypes.func.isRequired
+    }
 
   // 初始化 state: 
   // isMouseEnter: 該 <li> 是否被鼠標指到，用來控制 <li> 之背景色及是否顯示[刪除]按鈕。預設為 false

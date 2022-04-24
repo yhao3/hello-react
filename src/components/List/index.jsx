@@ -1,8 +1,16 @@
 import React, { Component } from 'react'
 import Item from '../Item'
+import PropTypes from 'prop-types';
 import './index.css'
 
 export default class List extends Component {
+
+  // 對接收的 props 進行「型別」及「必要性」的限制
+  static PropTypes = {
+    todosxxx: PropTypes.array.isRequired, 
+    updateTodoxxx: PropTypes.func.isRequired
+  }
+  
   render() {
     // 從 props 取東西，解構 todosxxx
     const {todosxxx} = this.props;

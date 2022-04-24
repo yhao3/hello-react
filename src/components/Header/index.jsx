@@ -1,9 +1,16 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import Swal from 'sweetalert2';
-import './index.css'
+import PropTypes from 'prop-types';
+import './index.css';
 
 
 export default class Header extends Component {
+
+  // 對接收的 props 進行「型別」及「必要性」的限制
+  static PropTypes = {
+    addTodoxxx: PropTypes.func.isRequired
+  }
+
 
   handleKeyUp = (event) => { // event 說明: 「綁定節點」跟「想要拿到值的節點」相同 ⮕ 直接傳入 event 物件即可，不需用 Ref
 
