@@ -69,6 +69,35 @@ export default class App extends Component {
 
     }
 
+    /**
+     * 供(子)元件 Footer 調用，用於『全選』或『全不選』所有任務(todo)
+     * @param {boolean} isChecked: Footer 調用時要傳入全選框 checked 屬性的值，用來控制「全選」或「全不選」
+     */
+    checkAllTodo = (isChecked) => {
+        // step1: 獲取原 todos
+        const {todos} = this.state;
+        // step2: 加工數據 - 將所有 todoObj 的 done 屬性都改為 true
+        const newTodos = todos.map( (todoObj) => {
+            return {...todoObj, done: isChecked};
+        } )
+        // step3: update state
+        this.setState( {todos: newTodos} );
+    }
+
+    /**
+     * 供(子)元件 Footer 調用，用於『清除所有已完成任務』
+     */
+    clearAllDone = () => {
+        // step1: 獲取原 todos
+        const {todos} = this.state;
+        // step2: 過濾數據
+        const newTodos = todos.filter( (todoObj) => {
+            return todoObj.done === false; // 只保留未完成的
+        } )
+        // step3: update state
+        this.setState( {todos: newTodos} );
+    }
+
     
     render() {
         const {todos} = this.state;
@@ -77,7 +106,7 @@ export default class App extends Component {
                 <div className="todo-wrap">
                 <Header addTodoxxx={this.addTodo} />
                 <List todosxxx={todos} updateTodoxxx={this.updateTodo} deleteTodoxxx={this.deleteTodo} /> {/* 傳遞 todos */}
-                <Footer />
+                <Footer todosxxx={todos} checkAllTodoxxx={this.checkAllTodo} clearAllDonexxx={this.clearAllDone} />
                 </div>
             </div>
         )

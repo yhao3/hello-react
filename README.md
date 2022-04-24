@@ -1,10 +1,22 @@
 # 03_TodoList project
+## 快速總結相關知識點
+1. 拆分元件、實現靜態元件，注意: className, style 的寫法
+2. 動態初始化列表，如何決定要將數據放在哪個元件的 state 中？
+    - 只有某個元件要使用: 放在其「自身」的 state 中
+    - 多個元件共同使用: 放在其「共同父元件」的 state 中 ⮕ 『狀態提升』
+3. 關於父子元件之間的通信: 
+    - `(父)` 給 `(子)` 傳遞數據 ⮕ 通過 props 傳遞
+    - `(子)` 給 `(父)` 傳遞數據 ⮕ 通過 props 傳遞，並要求 `(父)` 預先給 `(子)` 傳遞一個「函式」宮崎在適當時機調用
+4. 注意 defaultChecked 與 checked 的區別，類似觀念還有: defaultValue 與 value
+5. 「狀態」在哪裡，「操作狀態的方法」就宣告在哪裡
+
+
 ## 3.1 STEP
 1. 拆分結構
 2. 拆分樣式
 3. 設計 state 的位置
     - 單一任務 state 要放哪裡?
-        - 思考: 有誰要用? -> Header 跟 List 都會用
+        - 思考: 有誰要用? ⮕ Header 跟 List 都會用
         - 但 Header 跟 List 兩元件彼此是兄弟關係
         - 所以若把 單一任務 state 放在其中一方，該 state 是無法共享的
         - 因此可以把它放在兩者的父元件 - App 中
@@ -325,3 +337,129 @@ static PropTypes = {
         }
         ```
 3. 完成需求
+
+## 3.8 新增「批量操作」功能
+### 眉角: `checked` 與 `defaultChecked` 屬性
+### STEP1: 計算「已完成任務(打勾的)」及「總任務」個數
+- `App.jsx`
+    1. 傳 todos 狀態給 Footer
+        ```jsx
+        <Footer todosxxx={todos} />
+        ```
+- `Footer`
+    1. 接 todos 計算個數
+        ```jsx
+        render() {
+            // 從 props 取東西，解構 todosxxx
+            const {todosxxx} = this.props;
+            // 已完成的個數
+            const doneCount = todosxxx.reduce( (preTodo, currentTodo) => {
+            if (currentTodo.done === true) {
+                return preTodo + 1;
+            } else {
+                return preTodo;
+            }
+            }, 0)
+            // 總數
+            const total = todosxxx.length;
+        }
+        ```
+    2. 動態顯示個數
+        ```jsx
+        <span>已完成{doneCount}</span> / 全部{total}
+        ```
+### STEP2: 若 doneCount === total 且排除 0 等於 0 等狀況時，全選框就要勾起
+- `Footer`
+    1. 添加 checked 屬性
+        ```jsx
+        {/* 若 doneCount === total 且排除 0 等於 0 等狀況時，全選框就要勾起 */}
+        {/* 這裡不能使用 defaultChecked ，因為只對第一次有用 */}
+        {/* 故只能使用 checked ，但務必要綁定 onChange 事件，避免寫死無法更改的狀況 */}
+        <input type="checkbox" onChange={ this.handleCheckAll } checked={doneCount === total && total !== 0 ? true : false} /> 
+        ```
+    2. 使用 checked 屬性，務必綁定 onChange 事件
+        ```jsx
+        /**
+         * 全選的 callback function
+         */
+        handleCheckAll = (event) => {
+            // TODO...
+            ...
+        }
+    
+- `App.jsx`
+    1. 宣告 供(子)元件 Footer 調用的 checkAllTodo
+        ```jsx
+        /**
+         * 供(子)元件 Footer 調用，用於『全選』或『全不選』所有任務(todo)
+         * @param {boolean} isChecked: Footer 調用時要傳入全選框 checked 屬性的值，用來控制「全選」或「全不選」
+         */
+        checkAllTodo = (isChecked) => {
+            // step1: 獲取原 todos
+            const {todos} = this.state;
+            // step2: 加工數據 - 將所有 todoObj 的 done 屬性都改為 true
+            const newTodos = todos.map( (todoObj) => {
+                return {...todoObj, done: isChecked};
+            } )
+            // step3: update state
+            this.setState( {todos: newTodos} );
+        }
+        ```
+
+- `Item`
+    1. 記得把個別 todo 的 defaultChecked 屬性改為 checked
+        ```jsx
+        <input type="checkbox" checked={done} onChange={ this.handleCheck(id) } />
+        ```
+- 最後回到 `Footer` 調用 `App.jsx` 傳來的 checkAllTodo
+    ```jsx
+    /**
+     * 全選的 callback function
+     */
+    handleCheckAll = (event) => {
+        // TODO...
+        this.props.checkAllTodoxxx(event.target.checked);
+    }
+    ```
+
+### STEP3: 清除所有已完成任務 功能實現
+- `Footer`
+    1. 綁定 onClick 事件
+        ```jsx
+        <button onClick={ this.handleClearAllDone } className="btn btn-danger">清除已完成任務</button>
+        ```
+    2. 宣告 清除所有已完成任務的 callback function
+        ```jsx
+        /**
+         * 清除所有已完成任務的 callback function
+         */
+        handleClearAllDone = () => {
+            // TODO...
+        }
+        ```
+- `App.jsx`
+    1. 宣告 供(子)元件 Footer 調用的 clearAllDone
+        ```jsx
+        /**
+         * 供(子)元件 Footer 調用，用於『清除所有已完成任務』
+         */
+        clearAllDone = () => {
+            // step1: 獲取原 todos
+            const {todos} = this.state;
+            // step2: 過濾數據 - 把 所有已完成 的刪掉
+            const newTodos = todos.filter( (todoObj) => {
+                return todoObj.done === false; // 只保留未完成的
+            } )
+            // step3: update state
+            this.setState( {todos: newTodos} );
+        }
+        ```
+- 最後回到 `Footer` 調用 `App.jsx` 傳來的 clearAllDone
+    ```jsx
+    /**
+     * 清除所有已完成任務的 callback function
+     */
+    handleClearAllDone = () => {
+        this.props.clearAllDonexxx();
+    }
+    ```

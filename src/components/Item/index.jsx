@@ -58,8 +58,8 @@ export default class Item extends Component {
     return (
         <li style={ {backgroundColor: isMouseEnter ? '#ddd' : 'white'} } onMouseEnter={ this.handleMouse(true) } onMouseLeave={ this.handleMouse(false) } > {/* <-- 添加樣式，並綁定鼠標移入移出事件 */}
             <label>
-                {/* <input type="checkbox" checked={done} /> 這樣寫會變成 read-only */}
-                <input type="checkbox" defaultChecked={done} onChange={ this.handleCheck(id) } />
+                {/* <input type="checkbox" checked={done} /> 這樣寫會變成 read-only，暫時用 defaultChecked 改善，但最後還是會改回來 */}
+                <input type="checkbox" checked={done} onChange={ this.handleCheck(id) } />
                 <span>{name}</span>
             </label>
 
