@@ -17,7 +17,7 @@ export default class App extends Component {
 
     /**
      * addTodo 用於添加一個任務(todo)，接收的參數是欲添加的 todo 物件，並將原 todos 狀態更新
-     * @param todo object
+     * @param {object} todoObj
      * @returns 
      */
     addTodo = (todoObj) => {
@@ -28,6 +28,31 @@ export default class App extends Component {
         // step3: update state
         this.setState({ todos: newTodos });
     }
+
+    /**
+     * 供(孫子)元件 Item 調用，傳入某一個 todo 之 id 及其 checkbox 的 checked 屬性值，
+     * 並根據參數 id 與 舊todos 中所有 舊todoObj 的 id 比對...
+     * 1. 如果匹配成功，就複製該 todoObj，並將其 done 屬性改為 參數(2)checkbox 的 checked 屬性值，最後返回包含這些修改後元素的「新陣列」
+     * 2. 如果匹配失敗，就不對 todoObj 做任何操作，最後 map() 返回的新陣列就跟原本一模一樣，
+     * 最後將
+     * @param {int}     id 
+     * @param {boolean} isChecked 
+     * @return {Array}  newTodos   [注意: map() 執行結果會返回一個新陣列]
+     */
+    updateTodo = (id, isChecked) => {
+        // step1: 獲取原 todos
+        const {todos} = this.state;
+        // step2: 配對 並 加工 todoObj。比對新舊 todoObj，
+        const newTodos = todos.map((todoObj) => {
+            if (todoObj.id === id) {
+                return {...todoObj, done: isChecked}; // 注意: todoObj 是 callback 的 return value，map() 則是返回包含這些修改後元素的「新陣列」
+            } else {
+                return todoObj; // 不對 todoObj 做任何操作
+            }
+        })
+        this.setState( {todos: newTodos} );
+    }
+
     
     render() {
         const {todos} = this.state;
@@ -35,7 +60,7 @@ export default class App extends Component {
             <div className="todo-container">
                 <div className="todo-wrap">
                 <Header addTodoxxx={this.addTodo} />
-                <List todosxxx={todos} /> {/* 傳遞 todos */}
+                <List todosxxx={todos} updateTodoxxx={this.updateTodo} /> {/* 傳遞 todos */}
                 <Footer />
                 </div>
             </div>
