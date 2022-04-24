@@ -1,13 +1,8 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types';
 import './index.css';
 
 export default class Item extends Component {
 
-    // 對接收的 props 進行「型別」及「必要性」的限制
-    static PropTypes = {
-      updateTodoyyy: PropTypes.func.isRequired
-    }
 
   // 初始化 state: 
   // isMouseEnter: 該 <li> 是否被鼠標指到，用來控制 <li> 之背景色及是否顯示[刪除]按鈕。預設為 false
@@ -45,6 +40,16 @@ export default class Item extends Component {
     }
   }
 
+  /**
+   * 刪除一筆任務(todo)的 callback function
+   * @param {int} id 
+   */
+  handleDelete = (id) => {
+    if (window.confirm('確定要刪除嗎？')) {
+      this.props.deleteTodoyyy(id);
+    }
+  }
+
   render() {
     const {id, name, done} = this.props; // <-- 多了 id，讓下面 handleCheck callback 當作參數
     const {isMouseEnter} = this.state;
@@ -57,7 +62,10 @@ export default class Item extends Component {
                 <input type="checkbox" defaultChecked={done} onChange={ this.handleCheck(id) } />
                 <span>{name}</span>
             </label>
-            <button className="btn btn-danger" style={ {display: isMouseEnter ? 'block' : 'none'} }>刪除</button>
+
+            {/* handleDelete 若加小括號要使用到高階函釋回傳「函式」，這裡不使用 高階函式，改用 Currying Function */}
+            {/* <button onClick={ this.handleDelete(id) } className="btn btn-danger" style={ {display: isMouseEnter ? 'block' : 'none'} }>刪除</button> */}
+            <button onClick={ () => {this.handleDelete(id)} } className="btn btn-danger" style={ {display: isMouseEnter ? 'block' : 'none'} }>刪除</button>
         </li>
     )
   }

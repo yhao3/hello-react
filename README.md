@@ -54,7 +54,7 @@
         }
     }
     ```
-## 3.3 `新增「添加一筆任務(todo)」功能`
+## 3.3 新增「添加一筆任務(todo)」功能
 ### `Header`
 1. 將input標籤綁定 onKeyUp event
 2. 定義事件 callback function: handleKeyUp()
@@ -261,3 +261,67 @@ static PropTypes = {
     updateTodoxxx: PropTypes.func.isRequired
 }
 ```
+
+## 3.7 新增「刪除一筆任務(todo)」功能
+### `Item`
+1. 將 <li> 標籤綁定 onClick 事件
+    ```jsx
+    {/* handleDelete 若加小括號要使用到高階函釋回傳「函式」，這裡不使用 高階函式，改用 Currying Function */}
+    {/* <button onClick={ this.handleDelete(id) } className="btn btn-danger" style={ {display: isMouseEnter ? 'block' : 'none'} }>刪除</button> */}
+    <button onClick={ () => {this.handleDelete(id)} } className="btn btn-danger" style={ {display: isMouseEnter ? 'block' : 'none'} }>刪除</button>
+    ```
+2. 宣告 刪除一筆任務(todo)的 callback function
+    ```jsx
+    /**
+     * 刪除一筆任務(todo)的 callback function
+     * @param {int} id 
+     */
+    handleDelete = (id) => {
+        if (window.confirm('確定要刪除嗎？')) {
+            // TODO...
+            ...
+        }
+    }
+    ```
+### `App.jsx`
+1. 宣告 供(孫子)元件 Item 調用的 deleteTodo
+    ```jsx
+    /**
+     * 供(孫子)元件 Item 調用，用於『刪除』一個任務(todo)
+     * @param {int} id 
+     */
+    deleteTodo = (id) => {
+       // step1: 獲取原 todos
+       const {todos} = this.state;
+       // step2: 刪除指定id的todo物件
+       const newTodos = todos.filter((todoObj) => {
+           return todoObj.id !== id;
+       })
+       // step3: update state
+       this.setState( {todos: newTodos} );
+
+    }
+    ```
+2. 將 deleteTodo() 先傳給 (子)List ，再傳給 (孫子)Item
+    - `App.jsx`
+        ```jsx
+        <List todosxxx={todos} updateTodoxxx={this.updateTodo} deleteTodoxxx={this.deleteTodo} />
+        ```
+    - `List`
+        ```jsx
+        <Item key={todo.id} {...todo} updateTodoyyy={updateTodoxxx} deleteTodoyyy={deleteTodoxxx} />
+        ```
+    - `Item` 在 handleCheck callback 中呼叫該函式
+        ```jsx
+        /**
+         * 刪除一筆任務(todo)的 callback function
+         * @param {int} id 
+         */
+        handleDelete = (id) => {
+            if (window.confirm('確定要刪除嗎？')) {
+                // TODO...
+                this.props.deleteTodoyyy(id);
+            }
+        }
+        ```
+3. 完成需求
